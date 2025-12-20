@@ -1,0 +1,83 @@
+{
+    "name": "armin/ce",
+    "description": "Library to provide an advanced and extendable content editor.",
+    "type": "library",
+    "version": "1.0.0-dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Armin Vieweg",
+            "email": "armin@v.ieweg.de",
+            "homepage": "https://v.ieweg.de"
+        }
+    ],
+    "homepage": "https://github.com/a-r-m-i-n/ce",
+    "support": {
+        "issues": "https://github.com/a-r-m-i-n/ce/issues",
+        "source": "https://github.com/a-r-m-i-n/ce"
+    },
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "armin/editorconfig-cli": "^2.2.1",
+        "phpstan/phpstan": "^2.1.33",
+        "jangregor/phpstan-prophecy": "^2.2.0",
+        "friendsofphp/php-cs-fixer": "^3.92.0",
+        "phpunit/phpunit": "^12.5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Armin\\Ce\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Armin\\Ce\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "ec": "@editor-config",
+        "ec-fix": "@editor-config-fix",
+        "editor-config": "@php bin/ec -n -g",
+        "editor-config-fix": "@php bin/ec -n -g --fix",
+        "all": [
+            "@fix",
+            "@check",
+            "@test",
+            "@compile"
+        ],
+        "check": [
+            "@composer dump -o",
+            "@ec",
+            "@php-cs",
+            "@php-stan",
+            "@composer validate --no-check-version"
+        ],
+        "fix": [
+            "@composer dump -o",
+            "@ec-fix",
+            "@php-fix"
+        ],
+        "test": [
+            "@composer dump -o",
+            "@test-php-unit",
+            "@test-php-functional"
+        ],
+        "test-with-coverage": [
+            "@composer dump -o",
+            "@test-php-unit-coverage",
+            "@test-php-functional-coverage"
+        ],
+        "php-stan": "phpstan analyse -c .build/phpstan.neon",
+        "php-cs": [
+            "@putenv PHP_CS_FIXER_IGNORE_ENV=1",
+            "php-cs-fixer fix --config .build/php-cs-rules.php --ansi --verbose --diff --dry-run"
+        ],
+        "php-fix": "php-cs-fixer fix --config .build/php-cs-rules.php --ansi",
+        "test-php-unit": "phpunit -c .build/phpunit-unit.xml --no-coverage",
+        "test-php-functional": "phpunit -c .build/phpunit-functional.xml --no-coverage",
+        "test-php-unit-coverage": "export XDEBUG_MODE=coverage && phpunit -c .build/phpunit-unit.xml --coverage-text",
+        "test-php-functional-coverage": "export XDEBUG_MODE=coverage && phpunit -c .build/phpunit-functional.xml --coverage-text"
+    }
+}
